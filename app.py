@@ -243,5 +243,4 @@ def main():
     app.mainloop()
 
 if __name__ == "__main__":
-    subprocess.run(["pip3", "install", "pysqlite3", "matplotlib"])
     main()
