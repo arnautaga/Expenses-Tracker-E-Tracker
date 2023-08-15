@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import simpledialog, ttk, messagebox
 import sqlite3
 import os
 import subprocess
@@ -52,12 +52,21 @@ class ExpenseCalculatorWithLogin:
                     user_id INTEGER,
                     description TEXT NOT NULL,
                     amount REAL NOT NULL,
+                    expense_type TEXT NOT NULL,
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                )
+            """)
+
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS expense_types (
+                    id INTEGER PRIMARY KEY,
+                    user_id INTEGER,
+                    type TEXT NOT NULL,
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )
             """)
 
             conn.commit()
-
             conn.close()
 
     def login(self):
@@ -65,7 +74,7 @@ class ExpenseCalculatorWithLogin:
         password = self.password_entry.get()
 
         if not username or not password:
-            messagebox.showerror("Error", "Por favor, ingrese un nombre de usuario y contraseña.")
+            messagebox.showerror("Error", "Please enter a username and password.")
             return
 
         conn = sqlite3.connect("expense_tracker.db")
@@ -77,17 +86,17 @@ class ExpenseCalculatorWithLogin:
         conn.close()
 
         if user:
-            self.user_id = user[0]  # Guardar el ID del usuario actual
+            self.user_id = user[0]
             self.open_expense_calculator()
         else:
-            messagebox.showerror("Error", "Nombre de usuario o contraseña incorrectos.")
+            messagebox.showerror("Error", "Incorrect username or password.")
 
     def register(self):
         username = self.username_entry.get()
         password = self.password_entry.get()
 
         if not username or not password:
-            messagebox.showerror("Error", "Por favor, ingrese un nombre de usuario y contraseña.")
+            messagebox.showerror("Error", "Please enter a username and password.")
             return
 
         conn = sqlite3.connect("expense_tracker.db")
@@ -98,57 +107,88 @@ class ExpenseCalculatorWithLogin:
 
         conn.close()
 
-        messagebox.showinfo("Registro Exitoso", "Usuario registrado correctamente.")
+        messagebox.showinfo("Registration Successful", "User registered successfully.")
 
     def open_expense_calculator(self):
-        self.root.destroy()  # Cerrar la ventana de inicio de sesión
+        self.root.destroy()
 
-        # Crear la ventana de la calculadora de gastos
         self.expense_calculator = tk.Tk()
-        self.expense_calculator.title("Calculadora de Gastos")
+        self.expense_calculator.title("Expense Calculator")
 
         self.expenses = []
         self.total = 0.0
 
-        self.description_label = tk.Label(self.expense_calculator, text="Descripción del Gasto:")
+        self.description_label = tk.Label(self.expense_calculator, text="Expense Description:")
         self.description_label.pack()
 
         self.description_entry = tk.Entry(self.expense_calculator)
         self.description_entry.pack()
 
-        self.amount_label = tk.Label(self.expense_calculator, text="Monto del Gasto:")
+        self.amount_label = tk.Label(self.expense_calculator, text="Expense Amount:")
         self.amount_label.pack()
 
         self.amount_entry = tk.Entry(self.expense_calculator)
         self.amount_entry.pack()
 
-        self.add_button = tk.Button(self.expense_calculator, text="Agregar Gasto", command=self.add_expense)
-        self.add_button.pack()
+        self.expense_type_combobox = ttk.Combobox(self.expense_calculator)
+        self.expense_type_combobox.pack()
 
-        self.show_graph_button = tk.Button(self.expense_calculator, text="Mostrar Gráfico", command=self.show_graph)
+        self.add_expense_button = tk.Button(self.expense_calculator, text="Add Expense", command=self.add_expense)
+        self.add_expense_button.pack()
+
+        self.add_expense_type_button = tk.Button(self.expense_calculator, text="Add Expense Type", command=self.add_expense_type)
+        self.add_expense_type_button.pack()
+
+        self.show_graph_button = tk.Button(self.expense_calculator, text="Show Graph", command=self.show_graph)
         self.show_graph_button.pack()
 
         self.expenses_text = tk.Text(self.expense_calculator, height=10, width=40)
         self.expenses_text.pack()
 
+        self.update_expense_types()
         self.update_expenses()
+
+    def add_expense_type(self):
+        new_type = simpledialog.askstring("Add Expense Type", "Enter a new expense type:")
+        if new_type:
+            conn = sqlite3.connect("expense_tracker.db")
+            cursor = conn.cursor()
+
+            cursor.execute("INSERT INTO expense_types (user_id, type) VALUES (?, ?)", (self.user_id, new_type))
+            conn.commit()
+            conn.close()
+
+            self.update_expense_types()
+
+    def update_expense_types(self):
+        self.expense_type_combobox.set("")  # Clear the Combobox
+
+        conn = sqlite3.connect("expense_tracker.db")
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT type FROM expense_types WHERE user_id=?", (self.user_id,))
+        expense_types = [row[0] for row in cursor.fetchall()]
+
+        conn.close()
+
+        self.expense_type_combobox["values"] = expense_types
 
     def add_expense(self):
         description = self.description_entry.get()
         amount = self.amount_entry.get()
+        expense_type = self.expense_type_combobox.get()
 
-        if description and amount:
+        if description and amount and expense_type:
             try:
                 amount = float(amount)
                 self.expenses.append((description, amount))
                 self.total += amount
 
-                # Agregar el gasto a la base de datos
                 conn = sqlite3.connect("expense_tracker.db")
                 cursor = conn.cursor()
 
-                cursor.execute("INSERT INTO expenses (user_id, description, amount) VALUES (?, ?, ?)",
-                           (self.user_id, description, amount))
+                cursor.execute("INSERT INTO expenses (user_id, description, amount, expense_type) VALUES (?, ?, ?, ?)",
+                               (self.user_id, description, amount, expense_type))
 
                 conn.commit()
                 conn.close()
@@ -158,53 +198,50 @@ class ExpenseCalculatorWithLogin:
                 self.description_entry.delete(0, tk.END)
                 self.amount_entry.delete(0, tk.END)
             except ValueError:
-                messagebox.showerror("Error", "Ingrese un monto válido.")
+                messagebox.showerror("Error", "Please enter a valid amount.")
 
     def update_expenses(self):
-        # Limpiar el campo de texto de gastos
         self.expenses_text.delete(1.0, tk.END)
 
-        # Obtener los gastos del usuario de la base de datos
         conn = sqlite3.connect("expense_tracker.db")
         cursor = conn.cursor()
 
-        cursor.execute("SELECT description, amount FROM expenses WHERE user_id=?", (self.user_id,))
+        cursor.execute("SELECT description, amount, expense_type FROM expenses WHERE user_id=?", (self.user_id,))
         user_expenses = cursor.fetchall()
 
         conn.close()
 
-        # Mostrar los gastos en el campo de texto
-        for description, amount in user_expenses:
-            self.expenses_text.insert(tk.END, f"{description}: ${amount:.2f}\n")
+        for description, amount, expense_type in user_expenses:
+            self.expenses_text.insert(tk.END, f"{description} (${amount:.2f}) - {expense_type}\n")
 
     def show_graph(self):
-        # Obtener los gastos y ganancias del usuario de la base de datos
         conn = sqlite3.connect("expense_tracker.db")
         cursor = conn.cursor()
 
-        cursor.execute("SELECT description, amount FROM expenses WHERE user_id=?", (self.user_id,))
-        user_expenses = cursor.fetchall()
+        cursor.execute("SELECT expense_type, SUM(amount) FROM expenses WHERE user_id=? GROUP BY expense_type", (self.user_id,))
+        expense_data = cursor.fetchall()
 
         conn.close()
 
-        categories = [expense[0] for expense in user_expenses]
-        amounts = [expense[1] for expense in user_expenses]
+        categories = [data[0] for data in expense_data]
+        amounts = [data[1] for data in expense_data]
 
         plt.bar(categories, amounts)
-        plt.xlabel("Categorías")
-        plt.ylabel("Monto")
-        plt.title("Gastos por Categoría")
+        plt.xlabel("Expense Types")
+        plt.ylabel("Total Amount")
+        plt.title("Expenses by Type")
         plt.xticks(rotation=45)
         plt.tight_layout()
         plt.show()
 
+    def mainloop(self):
+        self.root.mainloop()
+
 def main():
     root = tk.Tk()
     app = ExpenseCalculatorWithLogin(root)
-    root.mainloop()
+    app.mainloop()
 
 if __name__ == "__main__":
-    # Instalar dependencias necesarias
     subprocess.run(["pip3", "install", "pysqlite3", "matplotlib"])
-
     main()
