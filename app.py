@@ -1,34 +1,123 @@
 import tkinter as tk
 from tkinter import messagebox
+import sqlite3
+import os
+import subprocess
 import matplotlib.pyplot as plt
 
-class ExpenseCalculator:
+class ExpenseCalculatorWithLogin:
     def __init__(self, root):
         self.root = root
-        self.root.title("Calculadora de Gastos")
+        self.root.title("Expense Calculator with Login")
+
+        self.initialize_database()
+
+        self.login_frame = tk.Frame(root)
+        self.login_frame.pack(padx=20, pady=20)
+
+        self.username_label = tk.Label(self.login_frame, text="Username:")
+        self.username_label.grid(row=0, column=0, sticky="e")
+
+        self.username_entry = tk.Entry(self.login_frame)
+        self.username_entry.grid(row=0, column=1)
+
+        self.password_label = tk.Label(self.login_frame, text="Password:")
+        self.password_label.grid(row=1, column=0, sticky="e")
+
+        self.password_entry = tk.Entry(self.login_frame, show="*")
+        self.password_entry.grid(row=1, column=1)
+
+        self.login_button = tk.Button(self.login_frame, text="Login", command=self.login)
+        self.login_button.grid(row=2, columnspan=2)
+
+        self.register_button = tk.Button(self.login_frame, text="Register", command=self.register)
+        self.register_button.grid(row=3, columnspan=2)
+
+    def initialize_database(self):
+        if not os.path.exists("expense_tracker.db"):
+            conn = sqlite3.connect("expense_tracker.db")
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY,
+                    username TEXT NOT NULL,
+                    password TEXT NOT NULL
+                )
+            """)
+            conn.commit()
+
+            conn.close()
+
+    def login(self):
+        username = self.username_entry.get()
+        password = self.password_entry.get()
+
+        if not username or not password:
+            messagebox.showerror("Error", "Por favor, ingrese un nombre de usuario y contraseña.")
+            return
+
+        conn = sqlite3.connect("expense_tracker.db")
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
+        user = cursor.fetchone()
+
+        conn.close()
+
+        if user:
+            self.open_expense_calculator()
+        else:
+            messagebox.showerror("Error", "Nombre de usuario o contraseña incorrectos.")
+
+    def register(self):
+        username = self.username_entry.get()
+        password = self.password_entry.get()
+
+        if not username or not password:
+            messagebox.showerror("Error", "Por favor, ingrese un nombre de usuario y contraseña.")
+            return
+
+        conn = sqlite3.connect("expense_tracker.db")
+        cursor = conn.cursor()
+
+        cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+        conn.commit()
+
+        conn.close()
+
+        messagebox.showinfo("Registro Exitoso", "Usuario registrado correctamente.")
+
+
+    def open_expense_calculator(self):
+        self.root.destroy()  # Cerrar la ventana de inicio de sesión
+
+        # Crear la ventana de la calculadora de gastos
+        self.expense_calculator = tk.Tk()
+        self.expense_calculator.title("Calculadora de Gastos")
 
         self.expenses = []
         self.total = 0.0
 
-        self.description_label = tk.Label(root, text="Descripción del Gasto:")
+        self.description_label = tk.Label(self.expense_calculator, text="Descripción del Gasto:")
         self.description_label.pack()
 
-        self.description_entry = tk.Entry(root)
+        self.description_entry = tk.Entry(self.expense_calculator)
         self.description_entry.pack()
 
-        self.amount_label = tk.Label(root, text="Monto del Gasto:")
+        self.amount_label = tk.Label(self.expense_calculator, text="Monto del Gasto:")
         self.amount_label.pack()
 
-        self.amount_entry = tk.Entry(root)
+        self.amount_entry = tk.Entry(self.expense_calculator)
         self.amount_entry.pack()
 
-        self.add_button = tk.Button(root, text="Agregar Gasto", command=self.add_expense)
+        self.add_button = tk.Button(self.expense_calculator, text="Agregar Gasto", command=self.add_expense)
         self.add_button.pack()
 
-        self.show_graph_button = tk.Button(root, text="Mostrar Gráfico", command=self.show_graph)
+        self.show_graph_button = tk.Button(self.expense_calculator, text="Mostrar Gráfico", command=self.show_graph)
         self.show_graph_button.pack()
 
-        self.expenses_text = tk.Text(root, height=10, width=40)
+        self.expenses_text = tk.Text(self.expense_calculator, height=10, width=40)
         self.expenses_text.pack()
 
         self.update_expenses()
@@ -67,10 +156,14 @@ class ExpenseCalculator:
         plt.tight_layout()
         plt.show()
 
+
 def main():
     root = tk.Tk()
-    app = ExpenseCalculator(root)
+    app = ExpenseCalculatorWithLogin(root)
     root.mainloop()
 
 if __name__ == "__main__":
+    # Instalar dependencias necesarias
+    subprocess.run(["pip3", "install", "pysqlite3", "matplotlib"])
+
     main()
