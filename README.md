@@ -16,3 +16,4 @@ Welcome to the Python Expense Calculator, a powerful tool designed to help you k
 5. **Visual Representation:** With a single click, generate graphical visualizations representing your expenses by type. These charts make it easy to identify areas where you can optimize your spending habits and achieve better financial balance.
 
 Whether you're looking to keep precise tabs on your daily expenses, analyze your consumption patterns, or simply enhance your financial awareness, the Python Expense Calculator is here to assist you on your journey toward effective and efficient financial management. Start using it today and take control of your personal finances in a straightforward and accessible manner!
+## More information on the project wiki
