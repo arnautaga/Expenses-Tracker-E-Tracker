@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 class ExpenseCalculatorWithLogin:
     def __init__(self, root):
         self.root = root
-        self.root.title("Expense Calculator with Login")
+        self.root.title("E-Tracker")
 
         self.initialize_database()
 
@@ -113,7 +113,7 @@ class ExpenseCalculatorWithLogin:
         self.root.destroy()
 
         self.expense_calculator = tk.Tk()
-        self.expense_calculator.title("Expense Calculator")
+        self.expense_calculator.title("E-Tracker")
 
         self.expenses = []
         self.total = 0.0
