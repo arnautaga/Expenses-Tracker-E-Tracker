@@ -1,4 +1,6 @@
 ### Expenses Tracker E-Tracker
+![GitHub watchers](https://img.shields.io/github/watchers/:arnautaga/:Expenses-Tracker_E-Tracker)
+
 ---
 
 Welcome to the Python Expense Calculator, a powerful tool designed to help you keep track of your daily expenditures and perform detailed analysis of your spending habits. This application empowers you to maintain robust financial control by providing a simple and convenient way to monitor your expenses, categorize them, and visualize spending patterns through intuitive charts.
