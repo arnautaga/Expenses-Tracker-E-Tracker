@@ -1,5 +1,8 @@
 ### Expenses Tracker E-Tracker
 ![GitHub watchers](https://img.shields.io/github/watchers/arnautaga/Expenses-Tracker-E-Tracker)
+![GitHub](https://img.shields.io/github/license/arnautaga/Expenses-Tracker-E-Tracker)
+![GitHub all releases](https://img.shields.io/github/downloads/arnautaga/Expenses-Tracker-E-Tracker/total)
+
 
 ---
 
