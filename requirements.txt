@@ -1,2 +1,5 @@
 matplotlib
 pysqlite3
+requests
+tkinter
+PyInstaller

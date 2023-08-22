@@ -4,7 +4,7 @@ import sqlite3
 import os
 import subprocess
 import matplotlib.pyplot as plt
-
+import requests
 class ExpenseCalculatorWithLogin:
     def __init__(self, root):
         self.root = root
@@ -242,5 +242,24 @@ def main():
     app = ExpenseCalculatorWithLogin(root)
     app.mainloop()
 
+def check_for_updates():
+    repo_url = "https://github.com/arnautaga/Expenses-Tracker-E-Tracker"
+    response = requests.get(f"{repo_url}/releases/latest")
+    latest_version = response.url.split("/")[-1]
+
+    current_version = "0.1"  # Update with your current version
+    if latest_version > current_version:
+        answer = messagebox.askyesno("Update Available", "An update is available. Do you want to update now?")
+        if answer:
+            # Provide instructions to the user to manually update
+            messagebox.showinfo("Update Instructions", "Please download the latest version from GitHub Releases and replace the existing files.")
+            return True
+    return False
+
 if __name__ == "__main__":
-    main()
+    if check_for_updates():
+        exit()
+
+    root = tk.Tk()
+    app = ExpenseCalculatorWithLogin(root)
+    app.mainloop()
