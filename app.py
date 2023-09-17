@@ -242,19 +242,32 @@ def main():
     app = ExpenseCalculatorWithLogin(root)
     app.mainloop()
 
-def check_for_updates():
-    repo_url = "https://github.com/arnautaga/Expenses-Tracker-E-Tracker"
-    response = requests.get(f"{repo_url}/releases/latest")
-    latest_version = response.url.split("/")[-1]
 
-    current_version = "0.1"  # Update with your current version
-    if latest_version > current_version:
-        answer = messagebox.askyesno("Update Available", "An update is available. Do you want to update now?")
-        if answer:
-            # Provide instructions to the user to manually update
-            messagebox.showinfo("Update Instructions", "Please download the latest version from GitHub Releases and replace the existing files.")
-            return True
-    return False
+def check_for_updates():
+    url = "https://api.github.com/repos/arnautaga/Expenses-Tracker-E-Tracker/releases/latest"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        latest_version = data["tag_name"]
+        current_version = "0.2"  # Reemplaza esto con la versión actual de tu programa
+
+        if latest_version != current_version:
+            message = f"Hay una nueva versión disponible: {latest_version}!\n\n"
+            message += "Para actualizar, sigue estos pasos:\n"
+            message += "1. Descarga la última versión desde [https://github.com/arnautaga/Expenses-Tracker-E-Tracker/releases/]\n"
+            message += "2. Reemplaza la app con la nueva. IMPORTANTE: no toque la base de datos o perderás toda la información almacenada\n"
+            message += "3. Reinicia la aplicación para aplicar la actualización."
+            if messagebox.askyesno("Actualización Disponible", message):
+
+                pass
+
+        else:
+            messagebox.showinfo("Sin Actualizaciones", "Estás utilizando la versión más reciente.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Se produjo un error al verificar actualizaciones: {str(e)}")
+
+
 
 if __name__ == "__main__":
     if check_for_updates():
