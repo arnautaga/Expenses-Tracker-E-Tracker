@@ -28,9 +28,10 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
-    color: #333;
+    color: #FFFFFF; /* Color blanco */
     font-weight: bold;
 }
+
 
 /* Estilo para las secciones */
 section {
