@@ -15,10 +15,16 @@ header {
 }
 
 /* Estilo para la barra de navegación */
+nav {
+    background-color: #0074D9; /* Fondo azul */
+    padding: 10px 0;
+}
+
 nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    text-align: center; /* Centra los elementos de la barra de navegación */
 }
 
 nav ul li {
@@ -28,11 +34,16 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
-    color: #FFFFFF; /* Color blanco */
+    color: #FFFFFF; /* Color del texto en blanco */
     font-weight: bold;
+    padding: 5px 15px; /* Añade espacio alrededor del texto */
+    border-radius: 5px; /* Agrega esquinas redondeadas a los enlaces */
+    transition: background-color 0.3s ease; /* Efecto de transición al pasar el mouse */
 }
 
-
+nav ul li a:hover {
+    background-color: #0056b3; /* Cambia el color de fondo al pasar el mouse */
+}
 
 /* Estilo para las secciones */
 section {
