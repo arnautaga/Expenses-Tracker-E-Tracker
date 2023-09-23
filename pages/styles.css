@@ -28,9 +28,12 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
-    color: #FFFFFF; /* Color blanco */
+    color: #FFFFFF; /* Color del texto en blanco */
+    background-color: #0074D9; /* Fondo azul, puedes cambiar el valor hexadecimal por otro tono de azul si lo deseas */
     font-weight: bold;
+    padding: 10px 20px; /* Añade espacio alrededor del texto para mejorar la apariencia */
 }
+
 
 
 /* Estilo para las secciones */
