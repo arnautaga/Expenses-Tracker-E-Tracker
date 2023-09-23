@@ -6,6 +6,35 @@ body {
     padding: 0;
 }
 
+/* Estilo para el slider de noticias */
+.news-slider {
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    transition: transform 0.3s ease;
+}
+
+.slide {
+    flex: 0 0 auto;
+    width: 100%; /* Ajusta el ancho de cada slide según tus necesidades */
+    padding: 20px;
+    background-color: #f0f0f0; /* Fondo de cada slide */
+    border: 1px solid #ccc;
+    margin-right: 10px; /* Espacio entre slides */
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+/* Estilo para el enlace "Leer Más" */
+.read-more-link {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #007bff; /* Color de enlace azul */
+}
+
 /* Estilo para el encabezado */
 header {
     background-color: #0074D9; /* Fondo azul */
