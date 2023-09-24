@@ -35,6 +35,10 @@ body {
     z-index: 1; /* Colocar los botones por encima del contenido */
 }
 
+.prev-button {
+    left: 0; /* Alinear el botón "Anterior" a la izquierda */
+}
+
 .next-button {
     right: 0; /* Alinear el botón de siguiente a la derecha */
 }
