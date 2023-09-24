@@ -11,13 +11,9 @@ body {
     width: 60%; /* Ancho del 60% de la página */
     margin: 0 auto; /* Centrar horizontalmente en la página */
     overflow: hidden;
-    white-space: nowrap;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    transition: transform 0.3s ease;
     border-radius: 10px; /* Borde redondeado */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra */
+    position: relative; /* Añadir posición relativa */
 }
 
 /* Botones de navegación */
@@ -30,6 +26,13 @@ body {
     margin: 10px;
     cursor: pointer;
     border-radius: 5px; /* Borde redondeado para los botones */
+    position: absolute; /* Añadir posición absoluta */
+    top: 50%; /* Centrar verticalmente */
+    transform: translateY(-50%); /* Centrar verticalmente */
+}
+
+.next-button {
+    right: 0; /* Alinear el botón de siguiente a la derecha */
 }
 
 /* Estilo para el contenido de los slides */
@@ -37,8 +40,15 @@ body {
     display: flex;
     flex-direction: column; /* Apilar los slides verticalmente */
     align-items: center; /* Centrar el contenido verticalmente */
-    padding: 10px;
     background-color: #f0f0f0; /* Fondo del contenido de los slides */
+    width: 100%; /* Ancho del contenido igual al slider */
+    overflow-x: hidden; /* Ocultar el desbordamiento horizontal */
+}
+
+.slide {
+    width: 100%; /* Ancho de cada slide igual al contenido */
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 /* Estilo para el enlace "Leer Más" */
