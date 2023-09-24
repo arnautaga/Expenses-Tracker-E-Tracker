@@ -8,23 +8,37 @@ body {
 
 /* Estilo para el slider de noticias */
 .news-slider {
+    width: 60%; /* Ancho del 60% de la página */
+    margin: 0 auto; /* Centrar horizontalmente en la página */
     overflow: hidden;
     white-space: nowrap;
     display: flex;
     flex-wrap: nowrap;
     justify-content: flex-start;
     transition: transform 0.3s ease;
+    border-radius: 10px; /* Borde redondeado */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra */
 }
 
-.slide {
-    flex: 0 0 auto;
-    width: 100%; /* Ajusta el ancho de cada slide según tus necesidades */
-    padding: 20px;
-    background-color: #f0f0f0; /* Fondo de cada slide */
-    border: 1px solid #ccc;
-    margin-right: 10px; /* Espacio entre slides */
-    box-sizing: border-box;
-    display: inline-block;
+/* Botones de navegación */
+.prev-button,
+.next-button {
+    background-color: #007bff; /* Color de fondo para los botones */
+    color: #fff; /* Color del texto en los botones */
+    border: none;
+    padding: 5px 10px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 5px; /* Borde redondeado para los botones */
+}
+
+/* Estilo para el contenido de los slides */
+.slides-container {
+    display: flex;
+    flex-direction: column; /* Apilar los slides verticalmente */
+    align-items: center; /* Centrar el contenido verticalmente */
+    padding: 10px;
+    background-color: #f0f0f0; /* Fondo del contenido de los slides */
 }
 
 /* Estilo para el enlace "Leer Más" */
