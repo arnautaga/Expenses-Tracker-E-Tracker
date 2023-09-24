@@ -14,6 +14,8 @@ body {
     border-radius: 10px; /* Borde redondeado */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra */
     position: relative; /* Añadir posición relativa */
+    white-space: nowrap; /* Evitar saltos de línea en los elementos hijos */
+    overflow-x: hidden; /* Ocultar desbordamiento horizontal */
 }
 
 /* Botones de navegación */
@@ -38,17 +40,16 @@ body {
 /* Estilo para el contenido de los slides */
 .slides-container {
     display: flex;
-    flex-direction: column; /* Apilar los slides verticalmente */
-    align-items: center; /* Centrar el contenido verticalmente */
-    background-color: #f0f0f0; /* Fondo del contenido de los slides */
-    width: 100%; /* Ancho del contenido igual al slider */
-    overflow-x: hidden; /* Ocultar el desbordamiento horizontal */
+    flex-direction: row; /* Mostrar los slides en una fila horizontal */
+    transition: transform 0.3s ease; /* Agregar transición de desplazamiento */
 }
 
 .slide {
-    width: 100%; /* Ancho de cada slide igual al contenido */
+    min-width: 100%; /* Ancho mínimo igual al contenido de cada slide */
     padding: 10px;
     box-sizing: border-box;
+    white-space: normal; /* Restaurar saltos de línea en los elementos hijos */
+    overflow: hidden; /* Ocultar desbordamiento del contenido de cada slide */
 }
 
 /* Estilo para el enlace "Leer Más" */
