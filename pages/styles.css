@@ -8,7 +8,7 @@ body {
 
 /* Estilo para el slider de noticias */
 .news-slider {
-    width: 60%; /* Ancho del 60% de la página */
+    width: 70%; /* Ancho del 70% de la página */
     margin: 0 auto; /* Centrar horizontalmente en la página */
     overflow: hidden;
     border-radius: 10px; /* Borde redondeado */
@@ -16,6 +16,7 @@ body {
     position: relative; /* Añadir posición relativa */
     white-space: nowrap; /* Evitar saltos de línea en los elementos hijos */
     overflow-x: hidden; /* Ocultar desbordamiento horizontal */
+    text-align: center; /* Centrar el texto horizontalmente */
 }
 
 /* Botones de navegación */
@@ -31,6 +32,7 @@ body {
     position: absolute; /* Añadir posición absoluta */
     top: 50%; /* Centrar verticalmente */
     transform: translateY(-50%); /* Centrar verticalmente */
+    z-index: 1; /* Colocar los botones por encima del contenido */
 }
 
 .next-button {
