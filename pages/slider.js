@@ -1,30 +1,29 @@
-// JavaScript para controlar el desplazamiento del slider
-const newsSlider = document.querySelector('.news-slider');
-const slides = document.querySelectorAll('.slide');
+document.addEventListener("DOMContentLoaded", function () {
+    const slider = document.querySelector(".news-slider");
+    const prevButton = document.querySelector(".prev-button");
+    const nextButton = document.querySelector(".next-button");
+    const slidesContainer = document.querySelector(".slides-container");
 
-let currentIndex = 0;
-const slideWidth = slides[0].offsetWidth;
+    let currentIndex = 0;
 
-function showSlide(index) {
-    if (index < 0) {
-        index = slides.length - 1;
-    } else if (index >= slides.length) {
-        index = 0;
+    nextButton.addEventListener("click", () => {
+        currentIndex++;
+        if (currentIndex >= slidesContainer.children.length) {
+            currentIndex = 0;
+        }
+        updateSlider();
+    });
+
+    prevButton.addEventListener("click", () => {
+        currentIndex--;
+        if (currentIndex < 0) {
+            currentIndex = slidesContainer.children.length - 1;
+        }
+        updateSlider();
+    });
+
+    function updateSlider() {
+        const offset = -currentIndex * 100;
+        slidesContainer.style.transform = `translateX(${offset}%)`;
     }
-
-    const offset = -index * slideWidth;
-    newsSlider.style.transform = `translateX(${offset}px)`;
-    currentIndex = index;
-}
-
-// Controladores para desplazarse a la siguiente y anterior noticia
-document.querySelector('.next-button').addEventListener('click', () => {
-    showSlide(currentIndex + 1);
 });
-
-document.querySelector('.prev-button').addEventListener('click', () => {
-    showSlide(currentIndex - 1);
-});
-
-// Inicialmente, muestra el primer slide
-showSlide(currentIndex);
