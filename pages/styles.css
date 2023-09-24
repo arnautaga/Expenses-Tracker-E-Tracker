@@ -6,14 +6,23 @@ body {
     padding: 0;
 }
 
-/* Estilo para la sección de descargas */
-.downloads {
-    background-color: #000; /* Fondo negro para la sección de descargas */
-    padding: 20px; /* Espaciado interno */
-    color: #fff; /* Color de texto blanco para el contenido */
+/* Estilo para el texto centrado */
+.centered-text {
+    text-align: center;
 }
 
-/* Estilo para los botones de descarga */
+/* Estilo para la tabla oculta de descargas */
+.downloads-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.downloads-table td {
+    padding: 10px;
+    text-align: center;
+}
+
+/* Estilo para los botones de descarga en la tabla */
 .download-button a {
     display: inline-block;
     padding: 10px 20px;
@@ -23,12 +32,12 @@ body {
     border-radius: 5px;
     font-weight: bold;
     transition: background-color 0.3s ease;
-    margin-right: 10px; /* Espaciado entre botones */
 }
 
 .download-button a:hover {
     background-color: #333; /* Cambia el color al pasar el mouse */
 }
+
 
 /* Estilo para el slider de noticias */
 .news-slider {
