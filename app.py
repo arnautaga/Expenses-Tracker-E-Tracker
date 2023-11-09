@@ -2,9 +2,10 @@ import tkinter as tk
 from tkinter import simpledialog, ttk, messagebox
 import sqlite3
 import os
-import subprocess
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import requests
+
 class ExpenseCalculatorWithLogin:
     def __init__(self, root):
         self.root = root
@@ -145,6 +146,18 @@ class ExpenseCalculatorWithLogin:
         self.expenses_text = tk.Text(self.expense_calculator, height=10, width=40)
         self.expenses_text.pack()
 
+        # Nuevo código para la ventana del gráfico
+        self.graph_window = tk.Toplevel(self.expense_calculator)
+        self.graph_window.title("Expense Graph")
+
+        self.graph_frame = ttk.Frame(self.graph_window)
+        self.graph_frame.pack(side=tk.LEFT)
+
+        self.options_frame = ttk.Frame(self.graph_window)
+        self.options_frame.pack(side=tk.RIGHT)
+
+        ttk.Button(self.options_frame, text="Update Graph", command=self.show_graph).pack(pady=10)
+
         self.update_expense_types()
         self.update_expenses()
 
@@ -218,21 +231,34 @@ class ExpenseCalculatorWithLogin:
         conn = sqlite3.connect("expense_tracker.db")
         cursor = conn.cursor()
 
-        cursor.execute("SELECT expense_type, SUM(amount) FROM expenses WHERE user_id=? GROUP BY expense_type", (self.user_id,))
+        cursor.execute("SELECT expense_type, SUM(amount) FROM expenses WHERE user_id=? GROUP BY expense_type",
+                       (self.user_id,))
         expense_data = cursor.fetchall()
 
         conn.close()
 
+        if not expense_data:
+            messagebox.showinfo("No Data", "No data available for graph.")
+            return
+
         categories = [data[0] for data in expense_data]
         amounts = [data[1] for data in expense_data]
 
-        plt.bar(categories, amounts)
-        plt.xlabel("Expense Types")
-        plt.ylabel("Total Amount")
-        plt.title("Expenses by Type")
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.show()
+        # Limpiar el frame del gráfico antes de dibujar uno nuevo
+        for widget in self.graph_frame.winfo_children():
+            widget.destroy()
+
+        # Dibujar el gráfico en el frame
+        fig, ax = plt.subplots()
+        ax.bar(categories, amounts)
+        ax.set_xlabel("Expense Types")
+        ax.set_ylabel("Total Amount")
+        ax.set_title("Expenses by Type")
+        ax.tick_params(axis='x', rotation=45)
+        canvas = FigureCanvasTkAgg(fig, master=self.graph_frame)
+        canvas.draw()
+        canvas_widget = canvas.get_tk_widget()
+        canvas_widget.pack(fill=tk.BOTH, expand=True)
 
     def mainloop(self):
         self.root.mainloop()
@@ -241,7 +267,6 @@ def main():
     root = tk.Tk()
     app = ExpenseCalculatorWithLogin(root)
     app.mainloop()
-
 
 def check_for_updates():
     url = "https://api.github.com/repos/arnautaga/Expenses-Tracker-E-Tracker/releases/latest"
@@ -259,15 +284,12 @@ def check_for_updates():
             message += "2. Reemplaza la app con la nueva. IMPORTANTE: no toque la base de datos o perderás toda la información almacenada\n"
             message += "3. Reinicia la aplicación para aplicar la actualización."
             if messagebox.askyesno("Actualización Disponible", message):
-
                 pass
 
         else:
             messagebox.showinfo("Sin Actualizaciones", "Estás utilizando la versión más reciente.")
     except Exception as e:
         messagebox.showerror("Error", f"Se produjo un error al verificar actualizaciones: {str(e)}")
-
-
 
 if __name__ == "__main__":
     if check_for_updates():
