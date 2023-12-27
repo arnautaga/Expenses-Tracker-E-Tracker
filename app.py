@@ -116,6 +116,15 @@ class ExpenseCalculatorWithLogin:
         self.expense_calculator = tk.Tk()
         self.expense_calculator.title("E-Tracker")
 
+        self.top_bar = tk.Frame(bg='#333')
+        self.top_bar.pack(fill=tk.X)
+
+        self.integrations_button = tk.Button(self.top_bar, text="Integrations", command=self.show_integrations)
+        self.integrations_button.pack(side=tk.RIGHT, padx=10)
+
+        self.language_button = tk.Button(self.top_bar, text="Language", command=self.select_language)
+        self.language_button.pack(side=tk.RIGHT, padx=10)
+
         self.expenses = []
         self.total = 0.0
 
@@ -150,7 +159,13 @@ class ExpenseCalculatorWithLogin:
         self.update_expense_types()
         self.update_expenses()
 
+    def show_integrations(self):
+        message = "This feature will be added soon!"
+        messagebox.showinfo("Coming Soon", message)
 
+    def select_language(self):
+        message = "Language selection will be available soon!"
+        messagebox.showinfo("Coming Soon", message)
     def add_expense_type(self):
         new_type = simpledialog.askstring("Add Expense Type", "Enter a new expense type:")
         if new_type:
