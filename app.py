@@ -137,7 +137,8 @@ class ExpenseCalculatorWithLogin:
         self.add_expense_button = tk.Button(self.expense_calculator, text="Add Expense", command=self.add_expense)
         self.add_expense_button.pack()
 
-        self.add_expense_type_button = tk.Button(self.expense_calculator, text="Add Expense Type", command=self.add_expense_type)
+        self.add_expense_type_button = tk.Button(self.expense_calculator, text="Add Expense Type",
+                                                 command=self.add_expense_type)
         self.add_expense_type_button.pack()
 
         self.show_graph_button = tk.Button(self.expense_calculator, text="Show Graph", command=self.show_graph)
@@ -146,20 +147,9 @@ class ExpenseCalculatorWithLogin:
         self.expenses_text = tk.Text(self.expense_calculator, height=10, width=40)
         self.expenses_text.pack()
 
-        # Nuevo código para la ventana del gráfico
-        self.graph_window = tk.Toplevel(self.expense_calculator)
-        self.graph_window.title("Expense Graph")
-
-        self.graph_frame = ttk.Frame(self.graph_window)
-        self.graph_frame.pack(side=tk.LEFT)
-
-        self.options_frame = ttk.Frame(self.graph_window)
-        self.options_frame.pack(side=tk.RIGHT)
-
-        ttk.Button(self.options_frame, text="Update Graph", command=self.show_graph).pack(pady=10)
-
         self.update_expense_types()
         self.update_expenses()
+
 
     def add_expense_type(self):
         new_type = simpledialog.askstring("Add Expense Type", "Enter a new expense type:")
@@ -228,6 +218,22 @@ class ExpenseCalculatorWithLogin:
             self.expenses_text.insert(tk.END, f"{description} (${amount:.2f}) - {expense_type}\n")
 
     def show_graph(self):
+        # Destruir la ventana del gráfico si ya existe
+        if hasattr(self, 'graph_window') and isinstance(self.graph_window, tk.Toplevel):
+            self.graph_window.destroy()
+
+        # Crear una nueva ventana del gráfico
+        self.graph_window = tk.Toplevel(self.expense_calculator)
+        self.graph_window.title("graph_window")
+
+        self.graph_frame = ttk.Frame(self.graph_window)
+        self.graph_frame.pack(side=tk.LEFT)
+
+        self.options_frame = ttk.Frame(self.graph_window)
+        self.options_frame.pack(side=tk.RIGHT)
+
+        ttk.Button(self.options_frame, text="Update Graph", command=self.show_graph).pack(pady=10)
+
         conn = sqlite3.connect("expense_tracker.db")
         cursor = conn.cursor()
 
@@ -243,7 +249,6 @@ class ExpenseCalculatorWithLogin:
 
         categories = [data[0] for data in expense_data]
         amounts = [data[1] for data in expense_data]
-
         # Limpiar el frame del gráfico antes de dibujar uno nuevo
         for widget in self.graph_frame.winfo_children():
             widget.destroy()
