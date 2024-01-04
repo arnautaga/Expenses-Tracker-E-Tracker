@@ -3,3 +3,4 @@ pysqlite3
 requests
 tkinter
 PyInstaller
+pystray
