@@ -2,6 +2,10 @@ import tkinter as tk
 from tkinter import simpledialog, ttk, messagebox
 import sqlite3
 import os
+import sys
+
+import PIL
+import pystray
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import requests
@@ -295,9 +299,9 @@ def check_for_updates():
         response.raise_for_status()
         data = response.json()
         latest_version = data["tag_name"]
-        current_version = "0.2"  # Reemplaza esto con la versión actual de tu programa
+        current_version = "0.3"  # Reemplaza esto con la versión actual de tu programa
 
-        if latest_version != current_version:
+        if latest_version > current_version:
             message = f"Hay una nueva versión disponible: {latest_version}!\n\n"
             message += "Para actualizar, sigue estos pasos:\n"
             message += "1. Descarga la última versión desde [https://github.com/arnautaga/Expenses-Tracker-E-Tracker/releases/]\n"
@@ -310,7 +314,21 @@ def check_for_updates():
             messagebox.showinfo("Sin Actualizaciones", "Estás utilizando la versión más reciente.")
     except Exception as e:
         messagebox.showerror("Error", f"Se produjo un error al verificar actualizaciones: {str(e)}")
+# Logo
+    def on_exit_clicked(icon, item):
+        icon.stop()
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__)))
 
+    # Construir la ruta al archivo de logo dentro del paquete
+    logo_path = os.path.join(base_path, "logo_v1.png")
+
+    # Cargar el logo
+    image = PIL.Image.open(logo_path)
+
+    # Crear un ícono con el logo y definir el menú
+    icon = pystray.Icon("nombre_app", image, menu=(
+        pystray.MenuItem('Salir', on_exit_clicked),
+    ))
 if __name__ == "__main__":
     if check_for_updates():
         exit()
