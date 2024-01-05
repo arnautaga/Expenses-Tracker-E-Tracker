@@ -1,3 +1,8 @@
+### V 0.3
+- Bug fixes and stability improvements.
+- Performance optimization for a smoother experience.
+- Enhanced user interface for improved usability.
+- Preparing for future updates with new features.
 ### V 0.2
 - Chek for updates features
 - Official Release
